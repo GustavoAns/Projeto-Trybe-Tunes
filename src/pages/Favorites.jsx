@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { Component } from 'react'
+import Header from '../components/Header'
 
-function Favorites() {
+export class Favorites extends Component {
+  render() {
     return (
-        <div data-testid="page-favorites" >
-            
-        </div>
+      <div data-testid="page-favorites">
+        <Header />
+        
+      </div>
     )
+  }
 }
 
 export default Favorites

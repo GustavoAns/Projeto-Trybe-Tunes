@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { Component } from 'react'
+import Header from '../components/Header'
 
-function Album() {
+export class Album extends Component {
+  render() {
     return (
-        <div data-testid="page-search" >
-            
-        </div>
+      <div data-testid="page-album">
+        <Header />
+
+      </div>
     )
+  }
 }
 
 export default Album

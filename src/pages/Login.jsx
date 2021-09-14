@@ -1,14 +1,17 @@
 import React from 'react';
 import { createUser } from '../services/userAPI';
+import Loading from '../components/Loading';
 
 class Login extends React.Component {
   constructor() {
     super()
     this.state = {
       nome: '',
+      isLoading: false,
     }
     this.handleChange = this.handleChange.bind(this);
     this.trigerButton = this.trigerButton.bind(this);
+    this.loginDiv = this.loginDiv.bind(this);
   }
   handleChange(event) {
     const { name, value } = event.target;
@@ -17,13 +20,20 @@ class Login extends React.Component {
       [name]: value,
     });
   }
-  trigerButton() {
+  trigerButton(event) {
+    event.preventDefault();
     const { nome } = this.state;
-    createUser({name: nome});
+    const { history } = this.props;
+
+      this.setState({isLoading: true}, () => {
+        createUser({name: nome }).then(() => history.push('search')) ;
+      })
+    
   }
-  render() {
+
+  loginDiv() {
     const { nome } = this.state;
-    return (
+    return(
       <div data-testid="page-login" >
         <input type="text"
         data-testid="login-name-input"
@@ -34,12 +44,23 @@ class Login extends React.Component {
         <button
           disabled={nome.length < 4}
           data-testid="login-submit-button"
+          // onClick={createUser({name: nome})}
           // onClick={console.log(nome)}
           onClick={this.trigerButton}
           >
           Entrar
         </button>
       </div>
+    )
+  }
+
+  render() {
+    const { isLoading } = this.state;
+
+    return (
+      <section>
+        { isLoading ? <Loading /> : this.loginDiv()}
+      </section>
     ) 
   }
 }
