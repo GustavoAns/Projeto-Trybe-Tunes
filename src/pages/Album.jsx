@@ -13,6 +13,7 @@ export class Album extends Component {
     }
     this.obterMusicas = this.obterMusicas.bind(this);
     this.albumPage = this.albumPage.bind(this);
+    this.loadingState = this.loadingState.bind(this);
   }
 
   obterMusicas(){
@@ -28,17 +29,36 @@ export class Album extends Component {
     this.obterMusicas()
   }
 
+  loadingState(element) {
+    // const { isLoading } = this.state
+    // if(isLoading)
+    // return(
+    //   this.setState({
+    //     isLoading: false,
+    //   })
+    // )
+    // else if(isLoading === false)
+    // return(
+    //   this.setState({
+    //     isLoading: true,
+    //   })
+    // )
+    return this.setState({
+      isLoading: element,
+    })
+  }
+
   albumPage() {
     const { retorno } = this.state
 
     return (
-      retorno.map((musica) => <MusicCard musica={musica}/> )
+      retorno.map((musica) => <MusicCard loadingState={this.loadingState} key={musica.trackId} musica={musica}/> )
     )
   }
 
   render() {
     const { match: { params: { id } } } = this.props;
-    const { retorno } = this.state
+    const { retorno, isLoading } = this.state
     
 
     return (
@@ -47,7 +67,7 @@ export class Album extends Component {
         {retorno[0] === undefined ? <Loading /> : <h1 data-testid="artist-name">{retorno[1].artistName}</h1> }
         {retorno[0] === undefined ? <Loading /> : <h1 data-testid="album-name">{retorno[1].collectionCensoredName}</h1> }
         
-        {!retorno ? <Loading /> : this.albumPage() }
+        {isLoading ? <Loading /> : this.albumPage() }
       </div>
     )
   }
