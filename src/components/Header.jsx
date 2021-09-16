@@ -33,12 +33,21 @@ export class Header extends Component {
     )
   }
 
-  render() {
+  Page() {
     const { isLoading } = this.state;
-    return (
+    return(
       <header data-testid="header-component">
         { isLoading ? <Loading /> : this.headerShape() }
       </header>
+    )
+  }
+
+  render() {
+    const { isLoading } = this.state;
+    return (
+      <div>
+        { isLoading ? <Loading /> : this.Page() }
+      </div>
     )
   }
 }

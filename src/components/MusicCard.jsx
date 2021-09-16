@@ -7,22 +7,22 @@ export class MusicCard extends Component {
   constructor() {
     super()
     this.state = {
-      bookmarkedOnly: false,
       isLoading: false,
     }
     this.onBookmarkedChange = this.onBookmarkedChange.bind(this);
   }
 
   componentDidMount() {
-    const { musica } = this.props;
+    const { musica, check } = this.props;
     this.setState ({
       musica: musica,
+      bookmarkedOnly: check,
     })
   }
 
   onBookmarkedChange(event) {
     const { name, checked } = event.target;
-    const { musica, isLoading } = this.state;
+    const { musica, bookmarkedOnly } = this.state;
 
     if(checked){
       this.setState({isLoading: true, [name]: checked,}, () => {
@@ -42,7 +42,9 @@ export class MusicCard extends Component {
         })
       })
     }
-
+    if(bookmarkedOnly){
+      window.location.reload()
+    }
   }
 
   render() {

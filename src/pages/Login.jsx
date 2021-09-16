@@ -42,7 +42,7 @@ class Login extends React.Component {
         onChange={this.handleChange} />
 
         <button
-          disabled={nome.length < 4}
+          disabled={nome.length < 3}
           data-testid="login-submit-button"
           // onClick={createUser({name: nome})}
           // onClick={console.log(nome)}

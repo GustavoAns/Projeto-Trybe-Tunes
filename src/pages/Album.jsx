@@ -18,10 +18,20 @@ export class Album extends Component {
 
   obterMusicas(){
     const { match: { params: { id } } } = this.props;
-    getMusics(id).then((result) => {
-      this.setState({
-        retorno: result,
-      })
+
+    // getMusics(id).then((result) => {
+    //   this.setState({
+    //     retorno: result,
+    //   })
+    // })
+
+    this.setState({isLoading: true}, () => {
+      getMusics(id).then((result) => {
+        return this.setState({
+          retorno: result,
+          isLoading: false,
+        })
+      }) ;
     })
   }
 
@@ -52,22 +62,30 @@ export class Album extends Component {
     const { retorno } = this.state
 
     return (
-      retorno.map((musica) => <MusicCard loadingState={this.loadingState} key={musica.trackId} musica={musica}/> )
+      retorno.map((musica) => <MusicCard check={false} key={musica.trackId} musica={musica}/> )
     )
   }
 
-  render() {
-    const { match: { params: { id } } } = this.props;
-    const { retorno, isLoading } = this.state
-    
-
-    return (
+  Page() {
+    const { retorno } = this.state
+    return(
       <div data-testid="page-album">
         <Header />
         {retorno[0] === undefined ? <Loading /> : <h1 data-testid="artist-name">{retorno[1].artistName}</h1> }
         {retorno[0] === undefined ? <Loading /> : <h1 data-testid="album-name">{retorno[1].collectionCensoredName}</h1> }
         
-        {isLoading ? <Loading /> : this.albumPage() }
+        { this.albumPage() }
+      </div>
+    )
+  }
+
+  render() {
+    const { match: { params: { id } } } = this.props;
+    const { isLoading } = this.state
+    
+    return (
+      <div>
+        {isLoading ? <Loading /> : this.Page() }
       </div>
     )
   }
