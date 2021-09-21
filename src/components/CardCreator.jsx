@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 export class CardCreator extends Component {
   render() {
-    const { musica, valorPesq } = this.props
-    const { collectionName, artworkUrl100, artistId } = musica
-    const albumId = `/album/${artistId}`
+    const { musica, valorPesq, testid } = this.props;
+    const { collectionName, artworkUrl100, collectionId } = musica;
+    const albumId = `/album/${collectionId}`;
     return (
-      <Link to={albumId}>
+      <Link to={ albumId } data-testid={ testid }>
         <div>
           <img alt="Music Cover" src={ artworkUrl100 } />
           <div>
@@ -16,8 +16,8 @@ export class CardCreator extends Component {
           </div>
         </div>
       </Link>
-    )
+    );
   }
 }
 
-export default CardCreator
+export default CardCreator;

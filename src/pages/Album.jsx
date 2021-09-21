@@ -1,94 +1,86 @@
-import React, { Component } from 'react'
-import Header from '../components/Header'
-import Loading from '../components/Loading'
-import MusicCard from '../components/MusicCard'
-import getMusics from '../services/musicsAPI'
+import React, { Component } from 'react';
+import Header from '../components/Header';
+import Loading from '../components/Loading';
+import MusicCard from '../components/MusicCard';
+import getMusics from '../services/musicsAPI';
+import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 export class Album extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       retorno: [],
       isLoading: false,
-    }
-    this.obterMusicas = this.obterMusicas.bind(this);
-    this.albumPage = this.albumPage.bind(this);
-    this.loadingState = this.loadingState.bind(this);
-  }
+    };
 
-  obterMusicas(){
-    const { match: { params: { id } } } = this.props;
-
-    // getMusics(id).then((result) => {
-    //   this.setState({
-    //     retorno: result,
-    //   })
-    // })
-
-    this.setState({isLoading: true}, () => {
-      getMusics(id).then((result) => {
-        return this.setState({
-          retorno: result,
-          isLoading: false,
-        })
-      }) ;
-    })
+    this.onBookmarkedChange = this.onBookmarkedChange.bind(this);
   }
 
   componentDidMount() {
-    this.obterMusicas()
+    const { match: { params: { id } } } = this.props;
+
+    this.setState({ isLoading: true }, () => {
+      getMusics(id).then((result) => {
+        this.setState({
+          retorno: result,
+        });
+      });
+      getFavoriteSongs().then((retorno) => {
+        this.setState({ Favoritas: retorno, isLoading: false });
+      });
+    });
   }
 
-  loadingState(element) {
-    // const { isLoading } = this.state
-    // if(isLoading)
-    // return(
-    //   this.setState({
-    //     isLoading: false,
-    //   })
-    // )
-    // else if(isLoading === false)
-    // return(
-    //   this.setState({
-    //     isLoading: true,
-    //   })
-    // )
-    return this.setState({
-      isLoading: element,
-    })
-  }
-
-  albumPage() {
-    const { retorno } = this.state
-
-    return (
-      retorno.map((musica) => <MusicCard check={false} key={musica.trackId} musica={musica}/> )
-    )
-  }
+  onBookmarkedChange = ({ target: { checked, name } }) => {
+    const { retorno } = this.state;
+    this.setState({ isLoading: true });
+    const trackSelected = retorno.find(({ trackId }) => trackId === Number(name));
+    if (checked) {
+      addSong(trackSelected).then(() => {
+        this.setState({ isLoading: false });
+      });
+    } else {
+      removeSong(trackSelected).then(() => {
+        this.setState({ isLoading: false });
+      });
+    }
+    getFavoriteSongs().then((retorno) => {
+      this.setState({ Favoritas: retorno });
+    });
+  };
 
   Page() {
-    const { retorno } = this.state
-    return(
-      <div data-testid="page-album">
-        <Header />
-        {retorno[0] === undefined ? <Loading /> : <h1 data-testid="artist-name">{retorno[1].artistName}</h1> }
-        {retorno[0] === undefined ? <Loading /> : <h1 data-testid="album-name">{retorno[1].collectionCensoredName}</h1> }
-        
-        { this.albumPage() }
+    const { retorno, Favoritas } = this.state;
+    return (
+      <div>
+        {retorno[0] === undefined ? <Loading /> : <h1 data-testid="artist-name">{retorno[0].artistName}</h1> }
+        {retorno[0] === undefined ? <Loading /> : <h1 data-testid="album-name">{retorno[0].collectionName}</h1> }
+        {retorno.map((musica) => (<MusicCard
+          Favoritas={ Favoritas }
+          key={ musica.trackId }
+          musica={ musica }
+          onBookmarkedChange={ this.onBookmarkedChange }
+        />)) }
       </div>
-    )
+    );
   }
 
   render() {
-    const { match: { params: { id } } } = this.props;
-    const { isLoading } = this.state
-    
+    const { isLoading } = this.state;
     return (
-      <div>
-        {isLoading ? <Loading /> : this.Page() }
+      <div data-testid="page-album">
+        <Header />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div>
+            { this.Page() }
+            {/* {this.albumPage()} */}
+          </div>
+        )}
       </div>
-    )
+    );
   }
 }
 
-export default Album
+export default Album;

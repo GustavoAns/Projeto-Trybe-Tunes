@@ -1,77 +1,93 @@
-import React, { Component } from 'react'
-import { addSong, removeSong } from '../services/favoriteSongsAPI'
+import React, { Component } from 'react';
+import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 import CheckboxMusicCard from './CheckboxMusicCard';
-import Loading from './Loading';
 
 export class MusicCard extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       isLoading: false,
-    }
-    this.onBookmarkedChange = this.onBookmarkedChange.bind(this);
+    };
+    // this.checkFavoritas = this.checkFavoritas.bind(this);
+    // this.onBookmarkedChange = this.onBookmarkedChange.bind(this);
   }
 
   componentDidMount() {
-    const { musica, check } = this.props;
-    this.setState ({
-      musica: musica,
-      bookmarkedOnly: check,
-    })
+    const { musica } = this.props;
+    this.setState({
+      musica,
+      // bookmarkedOnly: false,
+    });
+    // this.checkFavoritas()
   }
 
-  onBookmarkedChange(event) {
-    const { name, checked } = event.target;
-    const { musica, bookmarkedOnly } = this.state;
+  // onBookmarkedChange = ({ target: { checked, name } }) => {
+  //   const { allMusica } = this.props
+  //   this.setState({ isLoading: true });
+  //   const selecionada = allMusica.find(({ trackId }) => trackId === Number(name));
+  //   if (checked) {
+  //     addSong(selecionada).then(() => {
+  //       this.setState({ isLoading: false, bookmarkedOnly: true });
+  //     });
+  //   } else {
+  //     removeSong(selecionada).then(() => {
+  //       this.setState({ isLoading: false, bookmarkedOnly: false });
+  //     });
+  //   }
+  //   getFavoriteSongs().then((retorno) => {
+  //     this.setState({ Favoritas: retorno });
+  //   });
 
-    if(checked){
-      this.setState({isLoading: true, [name]: checked,}, () => {
-        addSong(musica).then(() => {
-          return this.setState({
-            isLoading: false,
-          })
-        })
-      })
-    }
-    else if (checked === false){
-      this.setState({isLoading: true, [name]: checked,}, () => {
-        removeSong(musica).then(() => {
-          return this.setState({
-            isLoading: false,
-          })
-        })
-      })
-    }
-    if(bookmarkedOnly){
-      window.location.reload()
-    }
-  }
+  //   this.checkFavoritas
+
+  // };
+
+  // checkFavoritas() {
+  //   const { Favoritas } = this.state;
+  //   const { musica } = this.props;
+  //   const { trackId } = musica;
+  //   if(Favoritas !== undefined){
+  //     const acumulador = Favoritas.map((MF) => (MF.trackId === trackId))
+  //     for(let valor of acumulador ) {
+  //       if (valor) {
+  //         this.setState({
+  //           bookmarkedOnly: true,
+  //         })
+  //       }
+  //     }
+  //   }
+  // }
 
   render() {
-    const { bookmarkedOnly, isLoading } = this.state;
-    const { musica } = this.props;
+    // const { bookmarkedOnly } = this.state;
+    const { musica, onBookmarkedChange, Favoritas } = this.props;
     const { trackName, previewUrl, trackId } = musica;
-    if(!previewUrl || isLoading === true){
-      return(
-        <Loading />
-      )
+
+    const Favoritada = Favoritas.find(
+      (MusicFavori) => MusicFavori.trackId === trackId,
+    );
+
+    if (!previewUrl) {
+      return <></>;
     }
-    else{
-      return (
-        <div>
-          <p>{trackName}</p>
-          <audio data-testid="audio-component" src={ previewUrl } controls>
-            <track kind="captions" />
-              O seu navegador não suporta o elemento <code>audio</code>.
-          </audio>
-          <CheckboxMusicCard
-            trackId={trackId}
-            onBookmarkedChange={this.onBookmarkedChange}
-            bookmarkedOnly={bookmarkedOnly} />
-        </div>
-      )
-    }
+
+    return (
+      <div key={ trackId }>
+        <p>{trackName}</p>
+        <audio data-testid="audio-component" src={ previewUrl } controls>
+          <track kind="captions" />
+          O seu navegador não suporta o elemento
+          {' '}
+          <code>audio</code>
+        </audio>
+        <CheckboxMusicCard
+          trackId={ trackId }
+          onBookmarkedChange={ onBookmarkedChange }
+          bookmarkedOnly={ !!Favoritada }
+        />
+      </div>
+    );
   }
 }
 
-export default MusicCard
+export default MusicCard;

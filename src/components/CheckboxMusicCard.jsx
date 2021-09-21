@@ -1,20 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 export class CheckboxMusicCard extends Component {
   render() {
     const { onBookmarkedChange, bookmarkedOnly, trackId, musica } = this.props;
     return (
-      <label data-testid={`checkbox-music-${trackId}`}>
-        Favoritar
+      <label data-testid={ `checkbox-music-${trackId}` }>
+        Favorita
         <input
           checked={ bookmarkedOnly }
           type="checkbox"
-          name="bookmarkedOnly"
+          name={ trackId }
           id="bookmarkedOnly"
-          onChange={ onBookmarkedChange } />
+          onChange={ onBookmarkedChange }
+        />
       </label>
-    )
+    );
   }
 }
 
-export default CheckboxMusicCard
+export default CheckboxMusicCard;
