@@ -4,7 +4,7 @@ import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
-export class Favorites extends Component {
+class Favorites extends Component {
   constructor() {
     super();
     this.state = {
@@ -16,10 +16,11 @@ export class Favorites extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isLoading: true }, () => {
-      getFavoriteSongs().then((retorno) => {
-        this.setState({ Favoritas: retorno, isLoading: false });
-      });
+    this.state = {
+      isLoading: true,
+    };
+    getFavoriteSongs().then((retorno) => {
+      this.setState({ Favoritas: retorno, isLoading: false });
     });
   }
 
@@ -45,7 +46,12 @@ export class Favorites extends Component {
     const { Favoritas } = this.state;
 
     return (
-      Favoritas.map((musica) => <MusicCard Favoritas={ Favoritas } key={ musica.trackId } musica={ musica } onBookmarkedChange={ this.onBookmarkedChange } />)
+      Favoritas.map((musica) => (<MusicCard
+        Favoritas={ Favoritas }
+        key={ musica.trackId }
+        musica={ musica }
+        onBookmarkedChange={ this.onBookmarkedChange }
+      />))
     );
   }
 

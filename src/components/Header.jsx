@@ -3,36 +3,37 @@ import { Link } from 'react-router-dom';
 import { getUser } from '../services/userAPI';
 import Loading from './Loading';
 
-export class Header extends Component {
+class Header extends Component {
   constructor() {
     super();
     this.state = {
-      isLoading: false,
-      nome: '',
+      isLoading: true,
     };
     this.headerShape = this.headerShape.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ isLoading: true }, () => {
-      getUser().then((name) => this.setState({
-        isLoading: false,
+    getUser().then((name) => {
+      this.setState({
         name: name.name,
-      }));
+        isLoading: false,
+      });
     });
-
-    // getUser().then((name) => {
-    //   return this.setState({
-    //     isLoading: false ,
-    //     name: name.name,
-    //   })
-    // })
   }
 
+  // getUser().then((name) => {
+  //   return this.setState({
+  //     isLoading: false ,
+  //     name: name.name,
+  //   })
+  // })
+  // }
+
   headerShape() {
+    const { name } = this.state;
     return (
       <div>
-        <p data-testid="header-user-name">{this.state.name}</p>
+        <p data-testid="header-user-name">{name}</p>
         <Link to="/search" data-testid="link-to-search">Pesquisar</Link>
         <Link to="/favorites" data-testid="link-to-favorites">Favoritos</Link>
         <Link to="/profile" data-testid="link-to-profile">Perfil</Link>

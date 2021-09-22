@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import CardCreator from '../components/CardCreator';
 import CardsList from '../components/CardsList';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
-export class Search extends Component {
+class Search extends Component {
   constructor() {
     super();
     this.state = {
@@ -62,6 +61,7 @@ export class Search extends Component {
           data-testid="search-artist-input"
         />
         <button
+          type="button"
           disabled={ valorPesquisado.length < 2 }
           onClick={ this.trigerButton }
           data-testid="search-artist-button"
@@ -83,9 +83,13 @@ export class Search extends Component {
         <Header />
         {isLoading ? <Loading /> : this.formSearch()}
         {!valorPesq ? (
-        <div />
-          ) : (
-          <p>Resultado de álbuns de: {valorPesq}</p>
+          <div />
+        ) : (
+          <p>
+            Resultado de álbuns de:
+            {' '}
+            {valorPesq}
+          </p>
         )}
         {!valorPesq ? <div /> : <CardsList musicas={ retorno } valorPesq={ valorPesq } />}
       </div>

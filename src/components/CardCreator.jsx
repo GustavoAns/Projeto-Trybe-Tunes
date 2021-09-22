@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-export class CardCreator extends Component {
+class CardCreator extends Component {
   render() {
     const { musica, valorPesq, testid } = this.props;
     const { collectionName, artworkUrl100, collectionId } = musica;
@@ -19,5 +20,16 @@ export class CardCreator extends Component {
     );
   }
 }
+
+CardCreator.propTypes = {
+  valorPesq: PropTypes.string.isRequired,
+  testid: PropTypes.string.isRequired,
+  musica: PropTypes.shape({
+    collectionId: PropTypes.string.isRequired,
+    artworkUrl100: PropTypes.string.isRequired,
+    collectionName: PropTypes.string.isRequired,
+  }).isRequired,
+
+};
 
 export default CardCreator;

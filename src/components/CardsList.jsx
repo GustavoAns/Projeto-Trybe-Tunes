@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CardCreator from './CardCreator';
 
-export class CardsList extends Component {
+class CardsList extends Component {
   render() {
     const { musicas, valorPesq } = this.props;
-    const { collectionId } = musicas;
+    console.log(musicas);
     if (musicas.length === 0) {
       return (
         <p>Nenhum álbum foi encontrado</p>
@@ -22,5 +23,14 @@ export class CardsList extends Component {
     );
   }
 }
+
+CardsList.propTypes = {
+  valorPesq: PropTypes.string.isRequired,
+  musicas: PropTypes.arrayOf(
+    PropTypes.shape({
+      collectionId: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default CardsList;

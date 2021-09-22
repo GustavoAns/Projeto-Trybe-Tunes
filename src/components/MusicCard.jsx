@@ -1,63 +1,8 @@
 import React, { Component } from 'react';
-import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import PropTypes from 'prop-types';
 import CheckboxMusicCard from './CheckboxMusicCard';
 
-export class MusicCard extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-    };
-    // this.checkFavoritas = this.checkFavoritas.bind(this);
-    // this.onBookmarkedChange = this.onBookmarkedChange.bind(this);
-  }
-
-  componentDidMount() {
-    const { musica } = this.props;
-    this.setState({
-      musica,
-      // bookmarkedOnly: false,
-    });
-    // this.checkFavoritas()
-  }
-
-  // onBookmarkedChange = ({ target: { checked, name } }) => {
-  //   const { allMusica } = this.props
-  //   this.setState({ isLoading: true });
-  //   const selecionada = allMusica.find(({ trackId }) => trackId === Number(name));
-  //   if (checked) {
-  //     addSong(selecionada).then(() => {
-  //       this.setState({ isLoading: false, bookmarkedOnly: true });
-  //     });
-  //   } else {
-  //     removeSong(selecionada).then(() => {
-  //       this.setState({ isLoading: false, bookmarkedOnly: false });
-  //     });
-  //   }
-  //   getFavoriteSongs().then((retorno) => {
-  //     this.setState({ Favoritas: retorno });
-  //   });
-
-  //   this.checkFavoritas
-
-  // };
-
-  // checkFavoritas() {
-  //   const { Favoritas } = this.state;
-  //   const { musica } = this.props;
-  //   const { trackId } = musica;
-  //   if(Favoritas !== undefined){
-  //     const acumulador = Favoritas.map((MF) => (MF.trackId === trackId))
-  //     for(let valor of acumulador ) {
-  //       if (valor) {
-  //         this.setState({
-  //           bookmarkedOnly: true,
-  //         })
-  //       }
-  //     }
-  //   }
-  // }
-
+class MusicCard extends Component {
   render() {
     // const { bookmarkedOnly } = this.state;
     const { musica, onBookmarkedChange, Favoritas } = this.props;
@@ -67,9 +12,7 @@ export class MusicCard extends Component {
       (MusicFavori) => MusicFavori.trackId === trackId,
     );
 
-    if (!previewUrl) {
-      return <></>;
-    }
+    if (!previewUrl) return null;
 
     return (
       <div key={ trackId }>
@@ -90,4 +33,14 @@ export class MusicCard extends Component {
   }
 }
 
+MusicCard.propTypes = {
+  Favoritas: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onBookmarkedChange: PropTypes.func.isRequired,
+  musica: PropTypes.shape({
+    trackName: PropTypes.string.isRequired,
+    previewUrl: PropTypes.string.isRequired,
+    trackId: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
+  }).isRequired,
+};
 export default MusicCard;

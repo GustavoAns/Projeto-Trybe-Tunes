@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
 import Loading from '../components/Loading';
 
@@ -26,7 +27,7 @@ class Login extends React.Component {
     event.preventDefault();
     const { nome } = this.state;
     const { history } = this.props;
-
+    console.log(history);
     this.setState({ isLoading: true }, () => {
       createUser({ name: nome }).then(() => history.push('search'));
     });
@@ -34,6 +35,7 @@ class Login extends React.Component {
 
   loginDiv() {
     const { nome } = this.state;
+    const numeroMinimoDeCaracteres = 3;
     return (
       <div data-testid="page-login">
         <input
@@ -45,9 +47,9 @@ class Login extends React.Component {
         />
 
         <button
-          disabled={ nome.length < 3 }
+          type="button"
+          disabled={ nome.length < numeroMinimoDeCaracteres }
           data-testid="login-submit-button"
-
           onClick={ this.trigerButton }
         >
           Entrar
@@ -66,4 +68,10 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 export default Login;
